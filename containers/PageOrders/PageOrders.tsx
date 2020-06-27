@@ -28,7 +28,7 @@ const PageOrders = () => {
   const [orders, setOrders] = React.useState<Order[]>([])
   // const [isPollOrders, setIsPollOrders] = React.useState(false)
 
-  // load data
+  // fetch orders data
   React.useEffect(() => {
     dispatch(getOrders(false))
 

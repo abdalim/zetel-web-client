@@ -4,8 +4,8 @@ import * as ordersApi from '../../api/orders.api'
 import { Order } from '../../interfaces'
 
 export enum Action {
-  GetOrdersRequest = 'GetsOrderRequest',
-  GetOrdersSuccessful = 'GetsOrderSuccessful',
+  GetOrdersRequest = 'GetOrdersRequest',
+  GetOrdersSuccessful = 'GetOrdersSuccessful',
   GetOrdersFailed = 'GetOrdersFailed',
 }
 
@@ -55,7 +55,7 @@ export const getOrders = (isPoll = false) => (dispatch: Dispatch) => {
   ordersApi
     .get()
     .then((result) => {
-      console.log('get orders successful', result)
+      console.debug('get orders successful', result)
       dispatch(getOrdersSuccessful(result.body))
     })
     .catch((error) => {
