@@ -7,6 +7,9 @@ export enum Action {
   GetOrderRequest = 'GetOrderRequest',
   GetOrderSuccessful = 'GetOrderSuccessful',
   GetOrderFailed = 'GetOrderFailed',
+  CreateOrderRequest = 'CreateOrderRequest',
+  CreateOrderSuccessful = 'CreateOrderSuccessful',
+  CreateOrderFailed = 'CreateOrderFailed',
 }
 
 /**
@@ -43,6 +46,29 @@ const getOrderFailure = (error: Error) => ({
   },
 })
 
+const createOrderRequest = () => ({
+  type: Action.CreateOrderRequest,
+  data: {
+    isPoll: false,
+    order: undefined,
+    error: undefined,
+  },
+})
+
+const createOrderSuccessful = (order: Order) => ({
+  type: Action.CreateOrderSuccessful,
+  data: {
+    order,
+  },
+})
+
+const CreateOrderFailed = (error: Error) => ({
+  type: Action.CreateOrderFailed,
+  data: {
+    error,
+  },
+})
+
 /**
  *
  * ACTIONS
@@ -61,7 +87,24 @@ export const getOrder = (id: number, isPoll = false) => (
       dispatch(getOrderSuccessful(result.body))
     })
     .catch((error) => {
-      console.error(error)
+      console.error('Failed to fetch order', error)
       dispatch(getOrderFailure(error))
+    })
+}
+
+export const createOrder = (param: orderApi.CreateOrderDto) => (
+  dispatch: Dispatch
+) => {
+  dispatch(createOrderRequest())
+
+  orderApi
+    .create(param)
+    .then((result) => {
+      console.debug('create order successful', result)
+      dispatch(createOrderSuccessful(result.body))
+    })
+    .catch((error) => {
+      console.error('Failed to create order', error)
+      dispatch(CreateOrderFailed(error))
     })
 }

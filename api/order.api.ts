@@ -22,3 +22,26 @@ export const get = (
       }
     })
 }
+
+export interface CreateOrderDto {
+  item: string
+  price: number
+}
+
+export const create = (params: CreateOrderDto) => {
+  return fetch(`http://localhost:3001/order`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  })
+    .then((res) => {
+      return res.json()
+    })
+    .then((data) => {
+      return {
+        body: data,
+      }
+    })
+}
