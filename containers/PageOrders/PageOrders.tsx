@@ -9,18 +9,49 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Layout from '../../components/Layout/Layout'
-import { Order, OrderStatus } from '../../interfaces'
+import OrderChip from '../../components/OrderChip/OrderChip'
+import { Order } from '../../interfaces'
+import {
+  getOrders,
+  Action as OrdersAction,
+} from '../../store/orders/orders.action'
 
 import * as s from './PageOrders.styled'
+import { AppState } from '../../store/reducers'
 
 const PageOrders = () => {
-  const orders = [
-    { id: 1, item: 'RON95', price: 23.45, status: OrderStatus.Delivered },
-    { id: 2, item: 'RON97', price: 56.78, status: OrderStatus.Created },
-    { id: 3, item: 'RON92', price: 20.2, status: OrderStatus.Cancelled },
-  ]
+  const dispatch = useDispatch()
+  const ordersStore = useSelector((state: AppState) => state.orders)
+
+  const [orders, setOrders] = React.useState<Order[]>([])
+  // const [isPollOrders, setIsPollOrders] = React.useState(false)
+
+  // load data
+  React.useEffect(() => {
+    dispatch(getOrders(false))
+
+    const intervalID = setInterval(() => {
+      // poll for orders list
+      dispatch(getOrders(true))
+    }, 10000)
+
+    return () => {
+      clearInterval(intervalID)
+    }
+  }, [])
+
+  // update orders
+  React.useEffect(() => {
+    if (
+      ordersStore.type === OrdersAction.GetOrdersSuccessful &&
+      ordersStore.orders
+    ) {
+      setOrders(ordersStore.orders)
+    }
+  }, [ordersStore])
 
   const renderOrderList = (orders: Order[]) => {
     return (
@@ -41,7 +72,7 @@ const PageOrders = () => {
                 <TableCell align="center">{order.item}</TableCell>
                 <TableCell align="center">{order.price}</TableCell>
                 <TableCell align="center">
-                  {order.status.toUpperCase()}
+                  <OrderChip status={order.status} />
                 </TableCell>
               </TableRow>
             ))}
