@@ -17,13 +17,13 @@ const Layout: React.FunctionComponent<Props> = (props) => (
     <NavBar {...props.navbar} />
     <Container fixed>
       <s.GridContainer container spacing={2}>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item sm={2} />
         </Hidden>
         <Grid item xs={12} sm={8}>
           {props.children}
         </Grid>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item sm={2} />
         </Hidden>
       </s.GridContainer>

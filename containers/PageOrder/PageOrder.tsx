@@ -12,7 +12,6 @@ import Layout from '../../components/Layout/Layout'
 import OrderChip from '../../components/OrderChip/OrderChip'
 import { Order } from '../../interfaces'
 import { getOrder, Action as OrderAction } from '../../store/order/order.action'
-
 import { AppState } from '../../store/reducers'
 
 const PageOrder = () => {
