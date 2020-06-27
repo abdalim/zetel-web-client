@@ -8,11 +8,18 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import Button from '../../components/Button/Button'
 import Layout from '../../components/Layout/Layout'
 import OrderChip from '../../components/OrderChip/OrderChip'
-import { Order } from '../../interfaces'
-import { getOrder, Action as OrderAction } from '../../store/order/order.action'
+import { Order, OrderStatus } from '../../interfaces'
+import {
+  cancelOrder,
+  getOrder,
+  Action as OrderAction,
+} from '../../store/order/order.action'
 import { AppState } from '../../store/reducers'
+
+const CANCELLABLE_STATES = [OrderStatus.Created, OrderStatus.Confirmed]
 
 const PageOrder = () => {
   const router = useRouter()
@@ -20,6 +27,8 @@ const PageOrder = () => {
   const orderStore = useSelector((state: AppState) => state.order)
 
   const [order, setOrder] = React.useState<Order | undefined>(undefined)
+  const [isCancellable, setIsCancellable] = React.useState(false)
+  const [isCancelling, setIsCancelling] = React.useState(false)
 
   const { id } = router.query
 
@@ -45,12 +54,37 @@ const PageOrder = () => {
   // update order
   React.useEffect(() => {
     if (
-      orderStore.type === OrderAction.GetOrderSuccessful &&
+      (orderStore.type === OrderAction.GetOrderSuccessful ||
+        orderStore.type === OrderAction.CancelOrderSuccessful) &&
       orderStore.order
     ) {
       setOrder(orderStore.order)
+      setIsCancelling(false)
     }
   }, [orderStore])
+
+  // update cancellability
+  React.useEffect(() => {
+    if (
+      orderStore &&
+      orderStore.order &&
+      CANCELLABLE_STATES.includes(orderStore.order.status)
+    ) {
+      setIsCancellable(true)
+    } else {
+      setIsCancellable(false)
+    }
+  }, [orderStore])
+
+  // update cancelling status
+  React.useEffect(() => {
+    setIsCancelling(orderStore.type === OrderAction.CancelOrderRequest)
+  }, [orderStore])
+
+  const onClickCancel = React.useCallback(() => {
+    dispatch(cancelOrder(+id))
+    setIsCancelling(true)
+  }, [])
 
   const renderOrder = (order: Order) => {
     return (
@@ -90,6 +124,20 @@ const PageOrder = () => {
       }}
     >
       {order && renderOrder(order)}
+      {isCancellable && (
+        <Button
+          fullWidth={true}
+          variant="contained"
+          color="secondary"
+          disabled={!isCancellable || isCancelling}
+          isLoading={isCancelling}
+          size="large"
+          style={{ marginTop: 32 }}
+          onClick={onClickCancel}
+        >
+          Cancel
+        </Button>
+      )}
     </Layout>
   )
 }

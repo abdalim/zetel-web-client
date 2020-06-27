@@ -26,10 +26,14 @@ const orderReducer = (state: OrderState = initialState, action: AnyAction) => {
     case Action.CreateOrderRequest:
     case Action.CreateOrderSuccessful:
     case Action.CreateOrderFailed:
+    case Action.CancelOrderRequest:
+    case Action.CancelOrderSuccessful:
+    case Action.CancelOrderFailed:
       return {
         ...state,
         type: action.type,
         ...action.data,
+        order: { ...state.order, ...action.data.order },
       }
     default:
       return state

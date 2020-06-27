@@ -45,3 +45,20 @@ export const create = (params: CreateOrderDto) => {
       }
     })
 }
+
+export const cancel = (id: number) => {
+  return fetch(`http://localhost:3001/order/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      return res.json()
+    })
+    .then((data) => {
+      return {
+        body: data,
+      }
+    })
+}

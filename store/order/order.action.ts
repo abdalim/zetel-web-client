@@ -10,6 +10,9 @@ export enum Action {
   CreateOrderRequest = 'CreateOrderRequest',
   CreateOrderSuccessful = 'CreateOrderSuccessful',
   CreateOrderFailed = 'CreateOrderFailed',
+  CancelOrderRequest = 'CancelOrderRequest',
+  CancelOrderSuccessful = 'CancelOrderSuccessful',
+  CancelOrderFailed = 'CancelOrderFailed',
 }
 
 /**
@@ -62,8 +65,31 @@ const createOrderSuccessful = (order: Order) => ({
   },
 })
 
-const CreateOrderFailed = (error: Error) => ({
+const createOrderFailed = (error: Error) => ({
   type: Action.CreateOrderFailed,
+  data: {
+    error,
+  },
+})
+
+const cancelOrderRequest = () => ({
+  type: Action.CancelOrderRequest,
+  data: {
+    isPoll: false,
+    order: undefined,
+    error: undefined,
+  },
+})
+
+const cancelOrderSuccessful = (order: Order) => ({
+  type: Action.CancelOrderSuccessful,
+  data: {
+    order,
+  },
+})
+
+const cancelOrderFailed = (error: Error) => ({
+  type: Action.CancelOrderFailed,
   data: {
     error,
   },
@@ -105,6 +131,21 @@ export const createOrder = (param: orderApi.CreateOrderDto) => (
     })
     .catch((error) => {
       console.error('Failed to create order', error)
-      dispatch(CreateOrderFailed(error))
+      dispatch(createOrderFailed(error))
+    })
+}
+
+export const cancelOrder = (id: number) => (dispatch: Dispatch) => {
+  dispatch(cancelOrderRequest())
+
+  orderApi
+    .cancel(id)
+    .then((result) => {
+      console.debug('cancel order successful', result)
+      dispatch(cancelOrderSuccessful(result.body))
+    })
+    .catch((error) => {
+      console.error('Failed to cancel order', error)
+      dispatch(cancelOrderFailed(error))
     })
 }
