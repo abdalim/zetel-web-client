@@ -16,11 +16,16 @@ export const AppBar = styled(MuiAppBar)({
 export const Toolbar = styled(MuiToolbar)(({ theme }) => ({
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(2),
+  ' > *': {},
 }))
 
 export const useStyles = makeStyles<Theme, { isProminent?: boolean }>({
   toolbar: {
     minHeight: (props) => (props.isProminent ? 128 : 'none'),
-    alignItems: (props) => (props.isProminent ? 'flex-end' : 'flex-start'),
+    alignItems: (props) => (props.isProminent ? 'flex-start' : 'inherit'),
+  },
+  title: {
+    flexGrow: (props) => (props.isProminent ? 1 : 'inherit'),
+    alignSelf: (props) => (props.isProminent ? 'flex-end' : 'inherit'),
   },
 })

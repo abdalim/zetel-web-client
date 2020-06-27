@@ -15,7 +15,7 @@ const NavBar: React.FunctionComponent<Props> = (props) => {
   const router = useRouter()
 
   const onBackButtonSelect = React.useCallback(() => {
-    router.back()
+    router.replace('/')
   }, [])
   const classes = s.useStyles(props)
   return (
@@ -31,7 +31,11 @@ const NavBar: React.FunctionComponent<Props> = (props) => {
             <ArrowBack />
           </IconButton>
         )}
-        {props.title && <s.Title variant="h5">{props.title}</s.Title>}
+        {props.title && (
+          <s.Title variant="h5" className={classes.title}>
+            {props.title}
+          </s.Title>
+        )}
       </s.Toolbar>
     </s.AppBar>
   )
