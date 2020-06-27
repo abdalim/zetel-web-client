@@ -1,3 +1,6 @@
+import { useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Fab from '@material-ui/core/Fab'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -5,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import AddIcon from '@material-ui/icons/Add'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,6 +28,8 @@ const PageOrders = () => {
   const dispatch = useDispatch()
   const ordersStore = useSelector((state: AppState) => state.orders)
   const router = useRouter()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [orders, setOrders] = React.useState<Order[]>([])
   // const [isPollOrders, setIsPollOrders] = React.useState(false)
@@ -59,6 +65,10 @@ const PageOrders = () => {
     []
   )
 
+  const onClickAddFab = React.useCallback(() => {
+    router.push(`/orders/new`)
+  }, [])
+
   const renderOrderList = (orders: Order[]) => {
     return (
       <TableContainer component={Paper}>
@@ -88,9 +98,18 @@ const PageOrders = () => {
     )
   }
 
+  const classes = s.useStyles({ isMobile })()
   return (
     <Layout navbar={{ isProminent: true, title: 'Orders' }}>
       {renderOrderList(orders)}
+      <Fab
+        color="secondary"
+        aria-label="add"
+        className={classes.fab}
+        onClick={onClickAddFab}
+      >
+        <AddIcon />
+      </Fab>
     </Layout>
   )
 }
