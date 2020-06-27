@@ -1,6 +1,3 @@
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import Hidden from '@material-ui/core/Hidden'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,6 +5,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -25,6 +23,7 @@ import { AppState } from '../../store/reducers'
 const PageOrders = () => {
   const dispatch = useDispatch()
   const ordersStore = useSelector((state: AppState) => state.orders)
+  const router = useRouter()
 
   const [orders, setOrders] = React.useState<Order[]>([])
   // const [isPollOrders, setIsPollOrders] = React.useState(false)
@@ -53,6 +52,13 @@ const PageOrders = () => {
     }
   }, [ordersStore])
 
+  const onClickOrder = React.useCallback(
+    (id: number) => () => {
+      router.push(`/orders/[id]`, `/orders/${id}`)
+    },
+    []
+  )
+
   const renderOrderList = (orders: Order[]) => {
     return (
       <TableContainer component={Paper}>
@@ -61,20 +67,20 @@ const PageOrders = () => {
             <TableRow>
               <TableCell align="center">ID</TableCell>
               <TableCell align="center">Product</TableCell>
-              <TableCell align="center">Sale</TableCell>
+              <TableCell align="center">Sale (MYR)</TableCell>
               <TableCell align="center">Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.id}>
+              <s.ZTableRow key={order.id} onClick={onClickOrder(order.id)}>
                 <TableCell align="center">{order.id}</TableCell>
                 <TableCell align="center">{order.item}</TableCell>
                 <TableCell align="center">{order.price}</TableCell>
                 <TableCell align="center">
                   <OrderChip status={order.status} />
                 </TableCell>
-              </TableRow>
+              </s.ZTableRow>
             ))}
           </TableBody>
         </Table>
@@ -84,19 +90,7 @@ const PageOrders = () => {
 
   return (
     <Layout navbar={{ isProminent: true, title: 'Orders' }}>
-      <Container fixed>
-        <s.GridContainer container spacing={2}>
-          <Hidden smDown>
-            <Grid item sm={2} />
-          </Hidden>
-          <Grid item xs={12} sm={8}>
-            {renderOrderList(orders)}
-          </Grid>
-          <Hidden smDown>
-            <Grid item sm={2} />
-          </Hidden>
-        </s.GridContainer>
-      </Container>
+      {renderOrderList(orders)}
     </Layout>
   )
 }

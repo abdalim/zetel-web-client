@@ -1,7 +1,9 @@
 import { styled } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
+import TableRow from '@material-ui/core/TableRow'
 
-export const GridContainer = styled(Grid)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
-}))
+export const ZTableRow = styled(TableRow)({
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#eee',
+  },
+})
