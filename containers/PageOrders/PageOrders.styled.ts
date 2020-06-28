@@ -1,12 +1,4 @@
-import { makeStyles, styled, Theme } from '@material-ui/core/styles'
-import TableRow from '@material-ui/core/TableRow'
-
-export const ZTableRow = styled(TableRow)({
-  cursor: 'pointer',
-  '&:hover': {
-    background: '#eee',
-  },
-})
+import { makeStyles } from '@material-ui/core/styles'
 
 export const useStyles = (props: { isMobile?: boolean }) =>
   makeStyles((theme) => {
