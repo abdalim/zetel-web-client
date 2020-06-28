@@ -9,6 +9,7 @@ import React from 'react'
 
 import OrderChip from '../../components/OrderChip/OrderChip'
 import { Order } from '../../interfaces'
+import { getTimestampDisplay } from '../../utils/orders.util'
 
 import * as s from './OrderList.styled'
 
@@ -29,6 +30,7 @@ const OrderList: React.FunctionComponent<Props> = (props) => {
             <TableCell align="center">Product</TableCell>
             <TableCell align="center">Sale (MYR)</TableCell>
             <TableCell align="center">Status</TableCell>
+            <TableCell align="center">Last Update</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -39,6 +41,9 @@ const OrderList: React.FunctionComponent<Props> = (props) => {
               <TableCell align="center">{order.price}</TableCell>
               <TableCell align="center">
                 <OrderChip status={order.status} />
+              </TableCell>
+              <TableCell align="center">
+                {getTimestampDisplay(order.updatedAt)}
               </TableCell>
             </s.ZTableRow>
           ))}

@@ -4,15 +4,11 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import dayjs from 'dayjs'
 import React from 'react'
 
 import OrderChip from '../../components/OrderChip/OrderChip'
 import { Order } from '../../interfaces'
-
-const getTimestampDisplay = (date: Date) => {
-  return dayjs(date).format('DD MMM YYYY hh:mm:ss A')
-}
+import { getTimestampDisplay } from '../../utils/orders.util'
 
 const OrderDetails: React.FunctionComponent<{ order: Order }> = ({ order }) => {
   return (
