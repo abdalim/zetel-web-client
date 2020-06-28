@@ -1,9 +1,3 @@
-import Paper from '@material-ui/core/Paper'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -11,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '../../components/Button/Button'
 import Layout from '../../components/Layout/Layout'
-import OrderChip from '../../components/OrderChip/OrderChip'
+import OrderDetails from '../../components/OrderDetails/OrderDetails'
 import { Order, OrderStatus } from '../../interfaces'
 import {
   cancelOrder,
@@ -87,35 +81,6 @@ const PageOrder = () => {
     setIsCancelling(true)
   }, [])
 
-  const renderOrder = (order: Order) => {
-    return (
-      <TableContainer component={Paper}>
-        <Table aria-label={`Order ${order.id} details`}>
-          <TableBody>
-            <TableRow>
-              <TableCell align="center">ID</TableCell>
-              <TableCell align="center">{order.id}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">Product</TableCell>
-              <TableCell align="center">{order.item}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">Sale (MYR)</TableCell>
-              <TableCell align="center">{order.price}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">
-                <OrderChip status={order.status} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )
-  }
-
   return (
     <Layout
       navbar={{
@@ -126,7 +91,7 @@ const PageOrder = () => {
     >
       {order && (
         <>
-          {renderOrder(order)}
+          <OrderDetails order={order} />
           {isCancellable && (
             <Button
               fullWidth={true}
