@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Layout from '../../components/Layout/Layout'
 import OrderList from '../../components/OrderList/OrderList'
+import PageLoader from '../../components/PageLoader/PageLoader'
 import { Order } from '../../interfaces'
 import {
   getOrders,
@@ -26,6 +27,7 @@ const PageOrders = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [orders, setOrders] = React.useState<Order[]>([])
+  const [isLoading, setIsLoading] = React.useState(true)
 
   // fetch orders data
   React.useEffect(() => {
@@ -51,6 +53,18 @@ const PageOrders = () => {
     }
   }, [ordersStore])
 
+  // update isLoading state
+  React.useEffect(() => {
+    if (
+      ordersStore.type === OrdersAction.GetOrdersRequest &&
+      !ordersStore.orders
+    ) {
+      setIsLoading(true)
+    } else {
+      setIsLoading(false)
+    }
+  }, [ordersStore])
+
   const onClickOrder = React.useCallback(
     (id: number) => () => {
       router.push(`/orders/[id]`, `/orders/${id}`)
@@ -65,10 +79,11 @@ const PageOrders = () => {
   const classes = s.useStyles({ isMobile })()
   return (
     <Layout navbar={{ isProminent: true, title: 'Orders' }}>
+      {isLoading && <PageLoader />}
       {orders && orders.length > 0 && (
         <OrderList orders={orders} onClickOrder={onClickOrder} />
       )}
-      {(!orders || orders.length === 0) && (
+      {!isLoading && (!orders || orders.length === 0) && (
         <Typography variant="body1" align="center">
           Oops, there are no orders yet
         </Typography>

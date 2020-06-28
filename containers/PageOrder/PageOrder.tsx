@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Button from '../../components/Button/Button'
 import Layout from '../../components/Layout/Layout'
 import OrderDetails from '../../components/OrderDetails/OrderDetails'
+import PageLoader from '../../components/PageLoader/PageLoader'
 import { Order, OrderStatus } from '../../interfaces'
 import {
   cancelOrder,
@@ -24,6 +25,7 @@ const PageOrder = () => {
   const [order, setOrder] = React.useState<Order | undefined>(undefined)
   const [isCancellable, setIsCancellable] = React.useState(false)
   const [isCancelling, setIsCancelling] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(true)
 
   const { id } = router.query
 
@@ -45,6 +47,15 @@ const PageOrder = () => {
       }
     }
   }, [])
+
+  // update isLoading state
+  React.useEffect(() => {
+    setIsLoading(
+      orderStore &&
+        orderStore.type === OrderAction.GetOrderRequest &&
+        !orderStore.order
+    )
+  }, [orderStore])
 
   // update order
   React.useEffect(() => {
@@ -80,7 +91,6 @@ const PageOrder = () => {
     dispatch(cancelOrder(+id))
     setIsCancelling(true)
   }, [])
-
   return (
     <Layout
       navbar={{
@@ -89,6 +99,7 @@ const PageOrder = () => {
         title: order ? `Order ${id}` : 'Order Details',
       }}
     >
+      {isLoading && <PageLoader />}
       {order && (
         <>
           <OrderDetails order={order} />
@@ -108,7 +119,7 @@ const PageOrder = () => {
           )}
         </>
       )}
-      {!order && (
+      {!isLoading && !order && (
         <Typography variant="body1" align="center">
           Oops, we can't find that order
         </Typography>

@@ -33,7 +33,9 @@ const orderReducer = (state: OrderState = initialState, action: AnyAction) => {
         ...state,
         type: action.type,
         ...action.data,
-        order: { ...state.order, ...action.data.order },
+        order: state.order
+          ? { ...state.order, ...action.data.order }
+          : action.data.order,
       }
     default:
       return state

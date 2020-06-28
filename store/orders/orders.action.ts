@@ -24,7 +24,7 @@ const getOrdersRequest = (isPoll = false) => ({
       }
     : {
         isPoll,
-        orders: [],
+        orders: undefined,
         error: undefined,
       },
 })
