@@ -37,7 +37,7 @@ class MyApp extends NextApp {
         <CssBaseline />
         <ReduxProvider store={store}>
           <Head>
-            <title>Zetel sampai setel</title>
+            <title>Zetel</title>
           </Head>
           <Component {...pageProps} />
         </ReduxProvider>
