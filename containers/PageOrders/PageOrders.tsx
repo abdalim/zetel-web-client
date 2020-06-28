@@ -1,13 +1,14 @@
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Fab from '@material-ui/core/Fab'
+import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import AddIcon from '@material-ui/icons/Add'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -101,7 +102,12 @@ const PageOrders = () => {
   const classes = s.useStyles({ isMobile })()
   return (
     <Layout navbar={{ isProminent: true, title: 'Orders' }}>
-      {renderOrderList(orders)}
+      {orders && orders.length > 0 && renderOrderList(orders)}
+      {(!orders || orders.length === 0) && (
+        <Typography variant="body1" align="center">
+          Oops, there are no orders yet
+        </Typography>
+      )}
       <Fab
         color="secondary"
         aria-label="add"

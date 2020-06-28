@@ -4,6 +4,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
+import Typography from '@material-ui/core/Typography'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -120,23 +121,32 @@ const PageOrder = () => {
       navbar={{
         hasBack: true,
         isProminent: true,
-        title: `Order ${id}`,
+        title: order ? `Order ${id}` : 'Order Details',
       }}
     >
-      {order && renderOrder(order)}
-      {isCancellable && (
-        <Button
-          fullWidth={true}
-          variant="contained"
-          color="secondary"
-          disabled={!isCancellable || isCancelling}
-          isLoading={isCancelling}
-          size="large"
-          style={{ marginTop: 32 }}
-          onClick={onClickCancel}
-        >
-          Cancel
-        </Button>
+      {order && (
+        <>
+          {renderOrder(order)}
+          {isCancellable && (
+            <Button
+              fullWidth={true}
+              variant="contained"
+              color="secondary"
+              disabled={!isCancellable || isCancelling}
+              isLoading={isCancelling}
+              size="large"
+              style={{ marginTop: 32 }}
+              onClick={onClickCancel}
+            >
+              Cancel
+            </Button>
+          )}
+        </>
+      )}
+      {!order && (
+        <Typography variant="body1" align="center">
+          Oops, we can't find that order
+        </Typography>
       )}
     </Layout>
   )
