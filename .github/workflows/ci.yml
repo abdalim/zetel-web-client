@@ -1,0 +1,40 @@
+name: CICD
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.4]
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Pre-build checks
+        run: |
+          npm ci
+      - name: Build, Tag, Push
+        uses: VaultVulp/gp-docker-action@1.1.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: zetel-web-client
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: deployment
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            docker image pull docker.pkg.github.com/abdalim/zetel-web-client/zetel-web-client:latest
+            docker service update --image docker.pkg.github.com/abdalim/zetel-web-client/zetel-web-client:latest zetel_web --force
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
