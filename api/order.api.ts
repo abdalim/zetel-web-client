@@ -2,12 +2,14 @@ import fetch from 'isomorphic-unfetch'
 
 import { Order } from '../interfaces'
 
+const ORDERS_API_HOST = process.env.NEXT_PUBLIC_ORDERS_API_HOST
+
 export const get = (
   id: number
 ): Promise<{
   body: Order
 }> => {
-  return fetch(`http://localhost:3001/order/${id}`, {
+  return fetch(`${ORDERS_API_HOST}/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ export interface CreateOrderDto {
 }
 
 export const create = (params: CreateOrderDto) => {
-  return fetch(`http://localhost:3001/order`, {
+  return fetch(`${ORDERS_API_HOST}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -47,7 +49,7 @@ export const create = (params: CreateOrderDto) => {
 }
 
 export const cancel = (id: number) => {
-  return fetch(`http://localhost:3001/order/${id}`, {
+  return fetch(`${ORDERS_API_HOST}/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
